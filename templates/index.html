@@ -4,424 +4,429 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#09090f">
-
-<title>DriveX — Advanced Video Player</title>
+<title>DriveX — Advanced Player</title>
 
 <style>
 :root {
     --bg: #09090f;
-    --panel: #12121c;
-    --border: #29263b;
+    --panel: #13131d;
+    --border: #302a43;
     --purple: #8b5cf6;
     --text: #f5f3ff;
     --muted: #a1a1b5;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    min-height: 100vh;
-    background:
-        radial-gradient(ellipse at 50% -10%, #35145e 0%, transparent 48%),
-        var(--bg);
+    background: radial-gradient(ellipse at top, #30134d, transparent 45%), var(--bg);
     color: var(--text);
-    font-family: Inter, system-ui, Arial, sans-serif;
+    font-family: system-ui, Arial, sans-serif;
+    min-height: 100vh;
 }
 
 header {
-    height: 76px;
-    border-bottom: 1px solid #ffffff0d;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    height: 72px;
     padding: 0 5%;
-}
-
-.brand {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 12px;
-    font-size: 21px;
-    font-weight: 800;
-    letter-spacing: -.5px;
+    border-bottom: 1px solid #ffffff12;
 }
 
-.logo {
-    width: 42px;
-    height: 42px;
-    display: grid;
-    place-items: center;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #c084fc, #6d28d9);
-    box-shadow: 0 0 28px #8b5cf633;
-}
+.brand { font-size: 22px; font-weight: 800; }
+.brand span { color: #b794ff; }
 
-.brand span {
-    color: #b794ff;
-}
-
-.status {
-    font-size: 12px;
+.badge {
     color: #c4b5fd;
+    border: 1px solid #8b5cf644;
     background: #8b5cf61a;
-    border: 1px solid #8b5cf633;
-    padding: 8px 12px;
-    border-radius: 50px;
-}
-
-main {
-    width: min(1050px, 92%);
-    margin: 45px auto;
-}
-
-.heading {
-    margin-bottom: 25px;
-}
-
-.heading small {
-    display: inline-block;
-    color: #c4b5fd;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    padding: 7px 12px;
+    border-radius: 30px;
     font-size: 11px;
-    margin-bottom: 13px;
 }
 
-.heading h1 {
-    font-size: clamp(27px, 5vw, 43px);
-    letter-spacing: -1.4px;
-}
+main { width: min(1000px, 92%); margin: 35px auto; }
 
-.heading p {
+h1 { font-size: clamp(28px, 5vw, 42px); letter-spacing: -1px; }
+
+.subtitle {
     color: var(--muted);
-    margin-top: 10px;
+    margin: 10px 0 25px;
     line-height: 1.7;
     font-size: 14px;
 }
 
 .card {
-    padding: 22px;
-    background: #11111beF;
+    padding: 20px;
+    background: #12121bdd;
     border: 1px solid var(--border);
-    border-radius: 23px;
-    box-shadow: 0 25px 90px #0005;
+    border-radius: 20px;
 }
 
 form label {
     display: block;
-    color: #d4d4e0;
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: .8px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
-.input-row {
-    display: flex;
-    gap: 10px;
-}
+.input-row { display: flex; gap: 10px; }
 
-input {
+input[type="url"] {
     flex: 1;
     min-width: 0;
     background: #09090f;
-    border: 1px solid #353149;
-    border-radius: 12px;
-    padding: 15px;
     color: white;
-    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
     outline: none;
 }
 
-input:focus {
-    border-color: var(--purple);
-    box-shadow: 0 0 0 3px #8b5cf61c;
+input[type="url"]:focus { border-color: var(--purple); }
+
+button, .download {
+    cursor: pointer;
+    border: 1px solid #ffffff15;
+    border-radius: 10px;
+    padding: 11px 14px;
+    color: white;
+    background: #211a32;
+    font-weight: 650;
+    font-size: 13px;
 }
 
-button, .action {
-    border: 1px solid transparent;
-    border-radius: 12px;
-    padding: 13px 18px;
-    color: white;
-    font-weight: 700;
-    font-size: 13px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
+.primary {
     background: linear-gradient(135deg, #a855f7, #6d28d9);
 }
 
-button:hover, .action:hover {
-    filter: brightness(1.13);
-}
-
-.error {
-    color: #fca5a5;
-    background: #ef44441a;
-    border-radius: 10px;
-    padding: 12px;
-    margin-top: 14px;
-    font-size: 13px;
-}
-
-.player-area {
-    margin-top: 28px;
-}
-
-.player-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 15px;
-}
-
-.player-title h2 {
-    font-size: 16px;
-}
-
-.player-title span {
-    color: #a78bfa;
-    font-size: 11px;
-    letter-spacing: 1px;
-}
-
-.video-frame {
+.player {
+    margin-top: 22px;
+    background: #050508;
+    border: 1px solid var(--border);
+    border-radius: 16px;
     overflow: hidden;
-    background: #000;
-    border: 1px solid #353149;
-    border-radius: 17px;
-    aspect-ratio: 16 / 9;
 }
 
-iframe {
+.media-stage {
+    position: relative;
+    background: #000;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+video, iframe {
     width: 100%;
     height: 100%;
     border: 0;
-    display: block;
+    position: absolute;
+    inset: 0;
+    object-fit: contain;
 }
+
+video { background: black; }
+
+.controls {
+    padding: 15px;
+    background: #11111b;
+}
+
+.seek-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 15px;
+}
+
+input[type="range"] {
+    accent-color: var(--purple);
+    min-width: 0;
+}
+
+#seek { flex: 1; }
+
+.control-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.control-row button { min-width: 42px; }
+
+.control-row select {
+    color: white;
+    background: #211a32;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 10px;
+}
+
+.volume {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.volume input { width: 75px; }
 
 .actions {
     display: flex;
-    gap: 10px;
     flex-wrap: wrap;
-    margin-top: 17px;
+    gap: 10px;
+    margin-top: 15px;
 }
 
-.action.secondary {
-    background: #1a1926;
-    border-color: #363149;
-}
+.download { text-decoration: none; display: inline-flex; align-items: center; }
 
-.info {
-    margin-top: 18px;
-    border-top: 1px solid #ffffff10;
-    padding-top: 15px;
-    font-size: 12px;
+.note {
     color: var(--muted);
-    line-height: 1.8;
+    font-size: 12px;
+    line-height: 1.7;
+    margin-top: 15px;
 }
 
-.features {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    margin-top: 20px;
-}
-
-.feature {
-    border: 1px solid var(--border);
-    background: #11111b99;
-    border-radius: 15px;
-    padding: 17px;
-}
-
-.feature strong {
+.message {
+    margin-top: 12px;
+    color: #fca5a5;
     font-size: 13px;
-    display: block;
-    margin-bottom: 7px;
-}
-
-.feature p {
-    font-size: 12px;
-    color: var(--muted);
-    line-height: 1.6;
 }
 
 footer {
     text-align: center;
-    padding: 25px 15px 35px;
     color: #77758a;
+    padding: 30px 10px;
     font-size: 12px;
 }
 
-@media (max-width: 600px) {
-    header {
-        padding: 0 4%;
-    }
-
-    main {
-        margin: 30px auto;
-    }
-
-    .card {
-        padding: 14px;
-        border-radius: 17px;
-    }
-
-    .input-row {
-        flex-direction: column;
-    }
-
-    .input-row button,
-    .action {
-        width: 100%;
-    }
-
-    .features {
-        grid-template-columns: 1fr;
-    }
-
-    .status {
-        font-size: 10px;
-    }
+@media(max-width: 600px) {
+    main { margin: 25px auto; }
+    .card { padding: 13px; }
+    .input-row { flex-direction: column; }
+    .input-row button { width: 100%; }
+    .volume { width: 100%; }
+    .volume input { flex: 1; }
+    .control-row button { flex: 1; }
 }
 </style>
 </head>
 
 <body>
 <header>
-    <div class="brand">
-        <div class="logo">▶</div>
-        <div>Drive<span>X</span></div>
-    </div>
-    <div class="status">● PLAYER ONLINE</div>
+    <div class="brand">Drive<span>X</span></div>
+    <div class="badge">ADVANCED PLAYER</div>
 </header>
 
 <main>
-    <section class="heading">
-        <small>YOUR PERSONAL MEDIA SPACE</small>
-        <h1>Watch without limits.</h1>
-        <p>
-            Paste a Google Drive sharing link and open your video
-            in a clean, distraction-free player.
-        </p>
-    </section>
+    <h1>Watch your way.</h1>
+    <p class="subtitle">
+        Play, pause, skip, adjust speed and enjoy your videos.
+    </p>
 
     <section class="card">
         <form method="POST" action="/">
-            <label for="drive_url">GOOGLE DRIVE VIDEO URL</label>
-
+            <label for="drive_url">VIDEO LINK</label>
             <div class="input-row">
                 <input
-                    id="drive_url"
-                    name="drive_url"
                     type="url"
-                    placeholder="Paste your Google Drive link..."
+                    name="drive_url"
+                    id="drive_url"
+                    placeholder="Google Drive share link..."
                     value="{{ original_url }}"
                     maxlength="2048"
                     required
                 >
-                <button type="submit">Load Video ↗</button>
+                <button class="primary" type="submit">Load Video ↗</button>
             </div>
         </form>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% for category, message in messages %}
-                <div class="error">{{ message }}</div>
+                <div class="message">{{ message }}</div>
             {% endfor %}
         {% endwith %}
 
         {% if video_url %}
-        <section class="player-area">
-            <div class="player-title">
-                <h2>▶ Video Player</h2>
-                <span>GOOGLE DRIVE</span>
-            </div>
-
-            <div class="video-frame">
+        <div class="player">
+            <div class="media-stage" id="stage">
+                <!-- Google Drive preview fallback -->
                 <iframe
+                    id="driveFrame"
                     src="{{ video_url }}"
-                    title="Google Drive Video Player"
                     allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
                     allowfullscreen
-                    referrerpolicy="no-referrer">
+                    title="Google Drive player">
                 </iframe>
+
+                <!-- Hidden until a compatible direct media URL is provided -->
+                <video id="video" playsinline preload="metadata" hidden></video>
             </div>
 
-            <div class="actions">
-                <a
-                    class="action"
-                    href="{{ download_url }}"
-                    target="_blank"
-                    rel="noopener noreferrer">
-                    ↓ Download Video
-                </a>
+            <div class="controls" id="customControls" hidden>
+                <div class="seek-row">
+                    <span id="currentTime">0:00</span>
+                    <input type="range" id="seek" min="0" max="1000" value="0">
+                    <span id="duration">0:00</span>
+                </div>
 
-                <a
-                    class="action secondary"
-                    href="https://drive.google.com/file/d/{{ file_id }}/view"
-                    target="_blank"
-                    rel="noopener noreferrer">
-                    ↗ Open Original
-                </a>
+                <div class="control-row">
+                    <button type="button" id="back" title="Back 10 seconds">↶ 10</button>
+                    <button type="button" id="play" class="primary">▶ Play</button>
+                    <button type="button" id="forward" title="Forward 10 seconds">10 ↷</button>
+                    <button type="button" id="mute">🔊</button>
 
-                <button
-                    class="action secondary"
-                    type="button"
-                    onclick="copyPlayerLink()">
-                    ⧉ Copy Player Link
-                </button>
+                    <div class="volume">
+                        <input type="range" id="volume" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+                    </div>
+
+                    <select id="speed" aria-label="Playback speed">
+                        <option value="0.5">0.5×</option>
+                        <option value="0.75">0.75×</option>
+                        <option value="1" selected>1× Speed</option>
+                        <option value="1.25">1.25×</option>
+                        <option value="1.5">1.5×</option>
+                        <option value="1.75">1.75×</option>
+                        <option value="2">2×</option>
+                    </select>
+
+                    <button type="button" id="fullscreen">⛶</button>
+                </div>
             </div>
+        </div>
 
-            <div class="info">
-                Playback and downloading depend on Google Drive sharing
-                permissions. Some files may require Google sign-in or
-                additional download confirmation.
-            </div>
-        </section>
+        <div class="actions">
+            <a class="download primary" href="{{ download_url }}" target="_blank" rel="noopener noreferrer">↓ Download</a>
+            <a class="download" href="https://drive.google.com/file/d/{{ file_id }}/view" target="_blank" rel="noopener noreferrer">Open in Drive ↗</a>
+        </div>
+
+        <p class="note" id="playerNote">
+            Google Drive preview is active. Custom seek and speed controls require a compatible direct video URL.
+            Drive sharing permissions still apply.
+        </p>
         {% endif %}
-    </section>
-
-    <section class="features">
-        <div class="feature">
-            <strong>◈ Clean Player</strong>
-            <p>Embedded video playback in a distraction-free layout.</p>
-        </div>
-        <div class="feature">
-            <strong>↗ Direct Access</strong>
-            <p>Open a player page directly using a file ID.</p>
-        </div>
-        <div class="feature">
-            <strong>↓ Download</strong>
-            <p>Open the Google Drive download endpoint when permitted.</p>
-        </div>
     </section>
 </main>
 
-<footer>
-    DriveX · A better way to access your media
-</footer>
+<footer>DriveX · Advanced Video Experience</footer>
 
 <script>
-async function copyPlayerLink() {
-    const fileId = {{ file_id | tojson }};
-    const playerUrl = window.location.origin + "/" + fileId;
+(() => {
+    const video = document.getElementById("video");
+    const frame = document.getElementById("driveFrame");
+    const controls = document.getElementById("customControls");
 
-    try {
-        await navigator.clipboard.writeText(playerUrl);
-        alert("Player link copied!");
-    } catch (error) {
-        window.prompt("Copy your player link:", playerUrl);
-    }
-}
+    // To enable custom controls, supply a trusted direct media URL
+    // from a source you own or are authorized to access.
+    // Do not set video.src to a Google Drive /preview URL.
+    const directMediaUrl = "";
+
+    if (!video || !directMediaUrl) return;
+
+    video.src = directMediaUrl;
+    video.hidden = false;
+    frame.hidden = true;
+    controls.hidden = false;
+
+    const $ = id => document.getElementById(id);
+
+    const fmt = seconds => {
+        if (!Number.isFinite(seconds)) return "0:00";
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60).toString().padStart(2, "0");
+        return `${m}:${s}`;
+    };
+
+    $("play").addEventListener("click", async () => {
+        if (video.paused) {
+            try {
+                await video.play();
+            } catch (error) {
+                console.error("Playback could not start.", error);
+            }
+        } else {
+            video.pause();
+        }
+    });
+
+    video.addEventListener("play", () => $("play").textContent = "❚❚ Pause");
+    video.addEventListener("pause", () => $("play").textContent = "▶ Play");
+
+    $("back").addEventListener("click", () => {
+        video.currentTime = Math.max(0, video.currentTime - 10);
+    });
+
+    $("forward").addEventListener("click", () => {
+        if (Number.isFinite(video.duration)) {
+            video.currentTime = Math.min(video.duration, video.currentTime + 10);
+        }
+    });
+
+    video.addEventListener("timeupdate", () => {
+        $("currentTime").textContent = fmt(video.currentTime);
+        $("duration").textContent = fmt(video.duration);
+
+        if (Number.isFinite(video.duration) && video.duration > 0) {
+            $("seek").value = video.currentTime / video.duration * 1000;
+        }
+    });
+
+    $("seek").addEventListener("input", () => {
+        if (Number.isFinite(video.duration) && video.duration > 0) {
+            video.currentTime = Number($("seek").value) / 1000 * video.duration;
+        }
+    });
+
+    $("volume").addEventListener("input", () => {
+        video.volume = Number($("volume").value);
+        video.muted = video.volume === 0;
+        $("mute").textContent = video.muted ? "🔇" : "🔊";
+    });
+
+    $("mute").addEventListener("click", () => {
+        video.muted = !video.muted;
+        $("mute").textContent = video.muted ? "🔇" : "🔊";
+    });
+
+    $("speed").addEventListener("change", () => {
+        video.playbackRate = Number($("speed").value);
+    });
+
+    $("fullscreen").addEventListener("click", async () => {
+        try {
+            if (!document.fullscreenElement) {
+                await $("stage").requestFullscreen();
+            } else {
+                await document.exitFullscreen();
+            }
+        } catch (error) {
+            console.error("Fullscreen unavailable.", error);
+        }
+    });
+
+    document.addEventListener("keydown", event => {
+        if (/INPUT|SELECT|TEXTAREA/.test(event.target.tagName)) return;
+
+        if (event.code === "Space") {
+            event.preventDefault();
+            $("play").click();
+        } else if (event.code === "ArrowLeft") {
+            video.currentTime = Math.max(0, video.currentTime - 10);
+        } else if (event.code === "ArrowRight") {
+            if (Number.isFinite(video.duration)) {
+                video.currentTime = Math.min(video.duration, video.currentTime + 10);
+            }
+        } else if (event.key.toLowerCase() === "m") {
+            $("mute").click();
+        } else if (event.key.toLowerCase() === "f") {
+            $("fullscreen").click();
+        }
+    });
+})();
 </script>
 </body>
 </html>
