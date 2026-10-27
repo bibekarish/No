@@ -1,11 +1,12 @@
+import os
 import re
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
 
-import requests
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, flash
 
 app = Flask(__name__)
-app.secret_key = "change-this-to-a-random-secret"
+
+app.secret_key = os.environ.get("SECRET_KEY", os.urandom(32).hex())
 
 GOOGLE_DRIVE_HOSTS = {
     "drive.google.com",
@@ -14,29 +15,39 @@ GOOGLE_DRIVE_HOSTS = {
 
 
 def extract_file_id(url):
-    """Extract a Google Drive file ID from common share URLs."""
-    parsed = urlparse(url.strip())
+    """Extract a file ID from a valid Google Drive sharing URL."""
+    try:
+        parsed = urlparse(url.strip())
 
-    if parsed.scheme != "https" or parsed.hostname not in GOOGLE_DRIVE_HOSTS:
+        if (
+            parsed.scheme != "https"
+            or parsed.hostname not in GOOGLE_DRIVE_HOSTS
+            or parsed.port is not None
+            or parsed.username is not None
+            or parsed.password is not None
+        ):
+            return None
+
+        patterns = [
+            r"/file/d/([a-zA-Z0-9_-]+)",
+            r"/document/d/([a-zA-Z0-9_-]+)",
+            r"/spreadsheets/d/([a-zA-Z0-9_-]+)",
+            r"/presentation/d/([a-zA-Z0-9_-]+)",
+        ]
+
+        for pattern in patterns:
+            match = re.search(pattern, parsed.path)
+            if match:
+                return match.group(1)
+
+        if parsed.path == "/open":
+            file_id = parse_qs(parsed.query).get("id", [None])[0]
+
+            if file_id and re.fullmatch(r"[a-zA-Z0-9_-]+", file_id):
+                return file_id
+
+    except (ValueError, AttributeError):
         return None
-
-    patterns = [
-        r"/file/d/([a-zA-Z0-9_-]+)",
-        r"/document/d/([a-zA-Z0-9_-]+)",
-        r"/spreadsheets/d/([a-zA-Z0-9_-]+)",
-        r"/presentation/d/([a-zA-Z0-9_-]+)",
-    ]
-
-    for pattern in patterns:
-        match = re.search(pattern, parsed.path)
-        if match:
-            return match.group(1)
-
-    if parsed.path == "/open":
-        from urllib.parse import parse_qs
-        file_id = parse_qs(parsed.query).get("id", [None])[0]
-        if file_id and re.fullmatch(r"[a-zA-Z0-9_-]+", file_id):
-            return file_id
 
     return None
 
@@ -49,18 +60,26 @@ def index():
 
     if request.method == "POST":
         original_url = request.form.get("drive_url", "").strip()
-        file_id = extract_file_id(original_url)
 
-        if not file_id:
-            flash("Please enter a valid HTTPS Google Drive sharing link.", "error")
+        if len(original_url) > 2048:
+            flash("The link is too long.", "error")
         else:
-            # These endpoints work only when Google Drive permits access.
-            video_url = (
-                f"https://drive.google.com/file/d/{file_id}/preview"
-            )
-            download_url = (
-                f"https://drive.google.com/uc?export=download&id={file_id}"
-            )
+            file_id = extract_file_id(original_url)
+
+            if not file_id:
+                flash(
+                    "Please enter a valid Google Drive sharing link.",
+                    "error",
+                )
+            else:
+                video_url = (
+                    f"https://drive.google.com/file/d/{file_id}/preview"
+                )
+
+                download_url = (
+                    f"https://drive.google.com/uc"
+                    f"?export=download&id={file_id}"
+                )
 
     return render_template(
         "index.html",
@@ -71,4 +90,5 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port, debug=False)
